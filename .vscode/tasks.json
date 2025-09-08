@@ -22,7 +22,6 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "dependsOn":["UpdateMake"]
         },
         {
             "label": "build release",
@@ -48,7 +47,6 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "dependsOn":["UpdateMake"]
         },
         {
             "label": "Clean",
@@ -74,28 +72,6 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "dependsOn":["UpdateMake"]
         },
-        {
-            "label": "UpdateMake",
-            "type": "process",
-            "command": "./premake5",
-            "options": {
-                "cwd": "${workspaceFolder}/build/"
-            },
-            "args": [
-                "gmake"
-            ],
-            "windows": {
-                "command": "./premake5.exe"
-            },
-            "linux": {
-                "command": "./premake5"
-            },
-            "osx": {
-                "command": "premake5.osx"
-            },
-            "group": "build"
-        }
     ]
 }
