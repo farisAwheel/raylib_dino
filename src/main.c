@@ -89,7 +89,20 @@ int main() {
 			// this case will only trigger after the screen has been set to ending!
 			case(ENDING):
 			{
+				// if the user presses enter, reinitalize everything to go back to the start of gameplay
+				if(IsKeyPressed(KEY_ENTER)) {
+					player.size = (Vector2){25, 50};
+					player.position = (Vector2){50, playerGround};
+					player.speed = (Vector2){5.0f, 0.0f};
 
+					for(int i=0; i<numObstacles; i++) {
+						obstacles[i].active = false;
+						obstacles[i].size = (Vector2){GetRandomValue(25, 30), GetRandomValue(25, 60)};
+						obstacles[i].position = (Vector2){0.0f, 0.0f};
+					}
+
+					screen = GAMEPLAY;
+				}
 			} break;
 
 			
