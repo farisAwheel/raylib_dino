@@ -26,6 +26,7 @@ int main() {
 	const int numObstacles = 4;
 	GameScreen screen = GAMEPLAY; // initalize the screen to gameplay
 	int frameCounter = 0; // this counter will help us to spawn in objects
+	int points = 0; // we'll use a points tracker to keep track of points!
 
 	// lets initalize the player for the game
 	Player player;
@@ -43,7 +44,7 @@ int main() {
 	}
 	int spawnNextObj = GetRandomValue(30, 60); // this random value will help us spawn objects
 
-	InitWindow(screenWidth, screenHeight, "Window Title");
+	InitWindow(screenWidth, screenHeight, "Dinosaur Game");
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose()) {
@@ -51,7 +52,8 @@ int main() {
 			case(GAMEPLAY): 
 			{
 				frameCounter++; // this counter will be used to help spawn objects
-			
+				points+=1; // every frame, give 10 points to the player
+
 				// player movement
 				player.position.y += player.speed.y; // at all times, we should adjust player position by player speed
 				if(player.position.y < playerGround) player.speed.y += gravity; // if we're in the air, gravity applies
@@ -67,7 +69,10 @@ int main() {
 				// obstacle logic
 				for(int i=0; i<numObstacles; i++) {
 					obstacles[i].bounds = (Rectangle){obstacles[i].position.x, obstacles[i].position.y, obstacles[i].size.x, obstacles[i].size.y}; // this rectangle represents the object's hitbox
-					if(obstacles[i].position.x < 0 - obstacles[i].size.x) obstacles[i].active = false; // free up obstacles to spawn if they're off screen
+					if(obstacles[i].active && obstacles[i].position.x < 0 - obstacles[i].size.x) {
+						obstacles[i].active = false; // free up obstacles to spawn if they're off screen
+						points += 100; // add 100 points for a sucessfully dodged obstacle
+					} 
 					if(obstacles[i].active && CheckCollisionRecs(player.bounds, obstacles[i].bounds)) screen = ENDING; // end game if the player is hitting an object
 					if(obstacles[i].active) obstacles[i].position.x -= player.speed.x;
 				}
@@ -121,11 +126,13 @@ int main() {
 						if(obstacles[i].active) DrawRectangle(obstacles[i].position.x, obstacles[i].position.y, obstacles[i].size.x, obstacles[i].size.y, RED);
 					}
 					DrawLine(0, groundHeight, screenWidth, groundHeight, GRAY); // this is the line representing the ground
+					DrawText(TextFormat("Points: %d", points), 10, 225, 20, GRAY); // this is our points counter
 				} break;
 
 				case(ENDING):
 				{
 					DrawText("\t\t Thanks for playing!\n Press [ENTER] to restart", 25, 300, 25, GREEN);
+					DrawText(TextFormat("Points: %d", points), 10, 225, 20, GRAY);
 				} break;
 			}
 
